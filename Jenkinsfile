@@ -1,73 +1,55 @@
 pipeline {
+    environment {
+        imagename = "rehmanbatt/class-activity-image"
+        dockerImage = ''
+        containerName = 'class-activity-container'
+        dockerHubCredentials = 'admin'
+    }
+ 
     agent any
-    triggers {
-        githubPush()
-    }
+ 
     stages {
-        stage('Clone repository') {
-      
-
-        checkout scm
-    }
-
-        stage('Docker Login') {
+        stage('Cloning Git') {
+            steps {
+                git([url: 'git@github.com:rehman-batt/Class-Activity.git', branch: 'main'])
+            }
+        }
+ 
+        stage('Building image') {
             steps {
                 script {
-                    
-                    sh 'docker login -u rehmanbatt -p u8UHqg3pmUFXKUL'
+                    dockerImage = docker.build "${imagename}:latest"
                 }
             }
         }
-        
-
-        stage('Start Docker') {
+ 
+        stage('Running image') {
             steps {
                 script {
-                    
-                    sh 'systemctl start docker'
+                    sh "docker run -d --name ${containerName} ${imagename}:latest"
                 }
             }
         }
-         
-
-        stage('Build Docker Image') {
+ 
+        stage('Stop and Remove Container') {
             steps {
                 script {
-                    
-                    sh 'docker build -t class_activity_container .'
+                    sh "docker stop ${containerName} || true"
+                    sh "docker rm ${containerName} || true"
                 }
             }
         }
-
-        stage('Tag Docker Image') {
+ 
+        stage('Deploy Image') {
             steps {
                 script {
-                    
-                    sh 'docker tag class_activity_container rehmanbatt/class_activity_container'
+                    withCredentials([usernamePassword(credentialsId: dockerHubCredentials, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
+
+                        sh "docker push ${imagename}:latest"
+                    }
                 }
             }
-        }
-
-        stage('Push to Docker Hub') {
-            steps {
-                script {
-                    
-                    sh 'docker push rehmanbatt/class_activity_container'
-                }
-            }
-        }
-    }
-
-    post {
-        always {
-            sh 'docker image prune -f'
-        }
-        success {
-            echo 'Docker image successfully pushed to Docker Hub!'
-        }
-        failure {
-            echo 'Failed to push the Docker image.'
         }
     }
 }
-
