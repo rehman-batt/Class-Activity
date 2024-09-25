@@ -48,15 +48,15 @@ pipeline {
     //     }
     }
 
-    post {
-        always {
-            sh 'docker image prune -f'
-        }
-        success {
-            echo 'Docker image successfully pushed to Docker Hub!'
-        }
-        failure {
-            echo 'Failed to push the Docker image.'
-        }
-    }
+    // post {
+    //     always {
+    //         sh 'docker image prune -f'
+    //     }
+    //     success {
+    //         echo 'Docker image successfully pushed to Docker Hub!'
+    //     }
+    //     failure {
+    //         echo 'Failed to push the Docker image.'
+    //     }
+    // }
 }
