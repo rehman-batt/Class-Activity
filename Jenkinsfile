@@ -3,7 +3,7 @@ pipeline {
         imagename = "rehmanbatt/class-activity-image"
         dockerImage = ''
         containerName = 'class-activity-container'
-        dockerHubCredentials = 'admin'
+        dockerHubCredentials = 'dockerHubCredentials'
     }
  
     agent any
