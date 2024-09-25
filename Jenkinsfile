@@ -13,8 +13,10 @@ pipeline {
 
         stage('Docker Login') {
             steps {
-
-                sh docker login -u rehmanbatt -p u8UHqg3pmUFXKUL
+                script {
+                    
+                    sh 'docker login -u rehmanbatt -p u8UHqg3pmUFXKUL'
+                }
             }
         }
 
