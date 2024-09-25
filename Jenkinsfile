@@ -1,28 +1,20 @@
 pipeline {
     agent any
     triggers {
-        githubPush()  // Trigger build on GitHub push
+        githubPush()
     }
     stages {
         stage('Checkout') {
             steps {
 
-                checkout([
-                    $class: 'GitSCM',
-                    branches: [[name: '*/main']],  
-                    doGenerateSubmoduleConfigurations: false,
-                    extensions: [],
-                    userRemoteConfigs: [[
-                        url: 'https://github.com/rehman-batt/Class-Activity.git',
-        
-                    ]]
-                ])
+                git url: 'https://github.com/rehman-batt/Class-Activity.git'
             }
         }
 
         stage('Docker Login') {
             steps {
                 script {
+                    
                     sh 'docker login -u rehmanbatt -p u8UHqg3pmUFXKUL'
                 }
             }
@@ -31,6 +23,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
+                    
                     sh 'docker build -t class_activity_container .'
                 }
             }
@@ -39,6 +32,7 @@ pipeline {
         stage('Tag Docker Image') {
             steps {
                 script {
+                    
                     sh 'docker tag class_activity_container rehmanbatt/class_activity_container'
                 }
             }
@@ -47,6 +41,7 @@ pipeline {
         stage('Push to Docker Hub') {
             steps {
                 script {
+                    
                     sh 'docker push rehmanbatt/class_activity_container'
                 }
             }
