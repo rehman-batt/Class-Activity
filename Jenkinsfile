@@ -4,12 +4,7 @@ pipeline {
         githubPush()
     }
     stages {
-        stage('Checkout') {
-            steps {
-
-                git url: 'https://github.com/rehman-batt/Class-Activity.git'
-            }
-        }
+        
 
         stage('Docker Login') {
             steps {
