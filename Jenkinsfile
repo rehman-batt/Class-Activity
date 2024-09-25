@@ -4,12 +4,11 @@ pipeline {
         githubPush()
     }
     stages {
-        stage('Checkout') {
-            steps {
+        stage('Clone repository') {
+      
 
-                git url: 'https://github.com/rehman-batt/Class-Activity.git'
-            }
-        }
+        checkout scm
+    }
 
         stage('Docker Login') {
             steps {
