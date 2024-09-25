@@ -20,14 +20,6 @@ pipeline {
             }
         }
         
-        stage('Docker Login') {
-            steps {
-                script {
-                    
-                    sh 'docker login -u rehmanbatt -p u8UHqg3pmUFXKUL'
-                }
-            }
-        }
 
         stage('Start Docker') {
             steps {
